@@ -386,8 +386,9 @@ module Manticore
 
     def response_object_for(client, request, context, &block)
       request_uri = request.getURI.to_s
-      if @stubs.key?(request_uri)
-        StubbedResponse.new(client, request, context, &block).stub( @stubs[request_uri] )
+      match_key = @stubs.keys.find { |k| request_uri.match(k) }
+      if match_key
+        StubbedResponse.new(client, request, context, &block).stub( @stubs[match_key] )
       else
         Response.new(client, request, context, &block)
       end

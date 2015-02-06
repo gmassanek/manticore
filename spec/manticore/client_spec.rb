@@ -470,6 +470,13 @@ describe Manticore::Client do
       client.async.get(local_server("/other")).on_success {|r| r.should be_a Manticore::Response }
       client.execute!
     end
+
+    it "stubs by regex matching" do
+      client.stub /localhost/, body: "body"
+      client.async.get(local_server).on_success {|r| r.should be_a Manticore::StubbedResponse }
+      client.async.get(local_server("/other")).on_success {|r| r.should be_a Manticore::Response }
+      client.execute!
+    end
   end
 
   describe "keepalive" do
